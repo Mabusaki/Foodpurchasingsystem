@@ -17,9 +17,9 @@ public interface CartService {
     List<CartItem> viewCart(Integer cartId) throws CartException;
     CartItem addItemToCart(Integer cartId, Integer productId)
             throws CartException, ProductException;
-    CartItem removeItemFromCart(Integer cartId, Integer itemId) throws CartException, CartItemException;
+    CartItem removeItemFromCart(Integer cartId, Integer productId) throws CartException, CartItemException;
 
-    CartItem increaseItemQuantity(Integer cartId, Integer itemId) throws CartException, CartItemException;
+    CartItem increaseItemQuantity(Integer cartId, Integer productId) throws CartException, CartItemException, ProductException;
 
 
 

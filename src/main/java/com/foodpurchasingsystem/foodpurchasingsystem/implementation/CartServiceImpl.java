@@ -60,11 +60,14 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public CartItem increaseItemQuantity(Integer cartId, Integer itemId) throws CartException, CartItemException {
-        CartItem cartItem = cartItemRepo.findById(itemId).orElseThrow(()-> new CartItemException("Item not found"));
+    public CartItem increaseItemQuantity(Integer cartId, Integer productId) throws CartException, ProductException {
+        Cart cart = cartRepo.findById(cartId).orElseThrow(()-> new CartException("Cart not found"));
+        Product product = productRepo.findById(productId).orElseThrow(()->new ProductException("Product not found"));
+        CartItem cartItem = cartItemRepo.findByProduct(product);
         int itemQuantity = cartItem.getQuantity();
         cartItem.setQuantity(itemQuantity+1);
         cartItemRepo.save(cartItem);
+        cartRepo.save(cart);
         return cartItem;
     }
 

@@ -1,11 +1,9 @@
 package com.foodpurchasingsystem.foodpurchasingsystem.controller;
 
-import com.foodpurchasingsystem.foodpurchasingsystem.entity.Cart;
 import com.foodpurchasingsystem.foodpurchasingsystem.entity.CartItem;
 import com.foodpurchasingsystem.foodpurchasingsystem.exception.CartException;
 import com.foodpurchasingsystem.foodpurchasingsystem.exception.CartItemException;
 import com.foodpurchasingsystem.foodpurchasingsystem.exception.ProductException;
-import com.foodpurchasingsystem.foodpurchasingsystem.exception.UserException;
 import com.foodpurchasingsystem.foodpurchasingsystem.service.CartService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +21,7 @@ public class CartController {
     public CartController(CartService cartService) {
         this.cartService = cartService;
     }
+
 
     @PostMapping("/add")
     @RolesAllowed({ "ROLE_USER", "ROLE_MODERATOR", "ROLE_ADMIN" })
@@ -46,8 +45,8 @@ public class CartController {
 
     @PostMapping("/incritem")
     @RolesAllowed({ "ROLE_USER", "ROLE_MODERATOR", "ROLE_ADMIN" })
-    public ResponseEntity<CartItem> increaseItemQuantity(@RequestParam("cartId") Integer cartId, @RequestParam("itemId") Integer itemId) throws CartException, CartItemException {
-        return new ResponseEntity<CartItem>(cartService.increaseItemQuantity(cartId, itemId), HttpStatus.OK);
+    public ResponseEntity<CartItem> increaseItemQuantity(@RequestParam("cartId") Integer cartId, @RequestParam("productId") Integer productId) throws CartException, CartItemException, ProductException {
+        return new ResponseEntity<CartItem>(cartService.increaseItemQuantity(cartId, productId), HttpStatus.OK);
     }
 
 

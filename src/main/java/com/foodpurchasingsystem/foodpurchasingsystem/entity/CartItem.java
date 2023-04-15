@@ -1,6 +1,5 @@
 package com.foodpurchasingsystem.foodpurchasingsystem.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -12,13 +11,12 @@ public class CartItem {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer itemId;
 
-    @JsonIgnore
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
     private Product product;
 
     private Integer quantity;
 
-    public CartItem(Product product, Integer quantity) {
+    public CartItem( Product product, Integer quantity) {
         this.product = product;
         this.quantity = quantity;
     }
