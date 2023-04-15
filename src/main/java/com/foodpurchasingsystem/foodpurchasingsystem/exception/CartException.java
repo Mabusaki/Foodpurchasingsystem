@@ -1,4 +1,6 @@
 package com.foodpurchasingsystem.foodpurchasingsystem.exception;
 
-public class CartException {
+public class CartException extends Exception{
+    public CartException(){}
+    public CartException(String message){super(message);}
 }
