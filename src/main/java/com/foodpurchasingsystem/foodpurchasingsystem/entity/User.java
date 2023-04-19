@@ -1,6 +1,7 @@
 package com.foodpurchasingsystem.foodpurchasingsystem.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
@@ -14,7 +15,7 @@ import java.util.Set;
                 @UniqueConstraint(columnNames = "username"),
                 @UniqueConstraint(columnNames = "email")
         })
-public class User {
+public class User  {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -42,17 +43,22 @@ public class User {
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "user")
     private List<Order> orders;
 
-    @JsonIgnore
-    @OneToOne(cascade = CascadeType.ALL)
-    private Cart cart;
+    // TODO CHANGED ENTITY RELATIONSHIPS
 
-    public Cart getCart() {
-        return cart;
-    }
+//    @JsonIgnore
+//    @OneToOne(cascade = CascadeType.ALL)
+//    private Cart cart;
 
-    public void setCart(Cart cart) {
-        this.cart = cart;
-    }
+//    public Cart getCart() {
+//        return cart;
+//    }
+//
+//    public void setCart(Cart cart) {
+//        this.cart = cart;
+//    }
+//    @JsonIgnore
+//    @OneToMany
+//    private List<CartItem> cartItems;
 
     public List<Order> getOrders() {
         return orders;

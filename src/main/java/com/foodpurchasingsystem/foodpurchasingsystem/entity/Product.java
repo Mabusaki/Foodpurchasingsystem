@@ -23,12 +23,13 @@ public class Product {
     @JoinColumn(name="category_id")
     private Category category;
 
-    @JsonIgnore
-    @OneToOne(cascade=CascadeType.ALL)
-    @JoinTable(name = "item_product",
-            joinColumns =
-                    {@JoinColumn(name = "product_id", referencedColumnName = "productId")} ,
-            inverseJoinColumns =
-                    {@JoinColumn(name = "item_id", referencedColumnName = "itemId")})
-    private CartItem cartItem;
+
+//    @JsonIgnore
+//    @OneToOne(cascade=CascadeType.ALL)
+//    @JoinTable(name = "item_product",
+//            joinColumns =
+//                    {@JoinColumn(name = "product_id", referencedColumnName = "productId")} ,
+//            inverseJoinColumns =
+//                    {@JoinColumn(name = "item_id", referencedColumnName = "itemId")})
+//    private CartItem cartItem;
 }

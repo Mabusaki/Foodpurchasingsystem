@@ -1,33 +1,60 @@
 package com.foodpurchasingsystem.foodpurchasingsystem.implementation;
 
+import com.foodpurchasingsystem.foodpurchasingsystem.entity.CartItem;
 import com.foodpurchasingsystem.foodpurchasingsystem.entity.Order;
-import com.foodpurchasingsystem.foodpurchasingsystem.exception.CartException;
+import com.foodpurchasingsystem.foodpurchasingsystem.entity.User;
 import com.foodpurchasingsystem.foodpurchasingsystem.exception.OrderException;
 import com.foodpurchasingsystem.foodpurchasingsystem.exception.UserException;
-import com.foodpurchasingsystem.foodpurchasingsystem.repository.OrderRepo;
+import com.foodpurchasingsystem.foodpurchasingsystem.repository.CartItemRepo;
+import com.foodpurchasingsystem.foodpurchasingsystem.repository.OrderRepository;
 import com.foodpurchasingsystem.foodpurchasingsystem.repository.UserRepository;
 import com.foodpurchasingsystem.foodpurchasingsystem.service.OrderService;
+import com.foodpurchasingsystem.foodpurchasingsystem.util.GetLoggedUser;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import com.foodpurchasingsystem.foodpurchasingsystem.entity.User;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
 @Service
 public class OrderServiceImpl implements OrderService {
-    private final OrderRepo orderRepo;
+    private final OrderRepository orderRepository;
     private final UserRepository userRepository;
-
-    public OrderServiceImpl(OrderRepo orderRepo, UserRepository userRepository) {
-        this.orderRepo = orderRepo;
+    private final CartItemRepo cartItemRepo;
+    private final GetLoggedUser getLoggedUser;
+    public OrderServiceImpl(OrderRepository orderRepository, UserRepository userRepository, CartItemRepo cartItemRepo, GetLoggedUser getLoggedUser) {
+        this.orderRepository = orderRepository;
         this.userRepository = userRepository;
+        this.cartItemRepo = cartItemRepo;
+        this.getLoggedUser = getLoggedUser;
     }
 
     @Override
-    public Order addOrder(Long userId) throws OrderException, UserException, CartException {
-        User user = userRepository.findById(userId).orElseThrow(()-> new UserException("User not found"));
-        return null;
+    public List<Order> viewAllOrders() {
+        List<Order> orders = orderRepository.findAll();
+        return orders;
+    }
+
+
+    @Override
+    public List<Order> viewAllOrdersByLoggedUser() throws UserException, OrderException {
+        List<Order> userOrders = orderRepository.findAllByUser(getLoggedUser.getCurrentUser());
+        if(userOrders.size()>0) return userOrders;
+        else throw new OrderException("Order not found by user");
     }
 
     @Override
-    public Order viewOrder(Integer orderId) throws OrderException {
-        Order order = orderRepo.findById(orderId).orElseThrow(()-> new OrderException("Order not found"));
-        return null;
+    public Order placeOrder() throws UserException {
+          List<CartItem> cartItems = cartItemRepo.findAllByUser(getLoggedUser.getCurrentUser());
+          Double totalPrice = 0.0;
+          for(int i = 0; i<cartItems.size(); i++){
+              double pricePerProduct=cartItems.get(i).getQuantity()*cartItems.get(i).getProduct().getPrice();
+              totalPrice += pricePerProduct;
+          }
+          Order order = new Order(LocalDateTime.now(), "pending", totalPrice , getLoggedUser.getCurrentUser());
+          orderRepository.save(order);
+        return order;
+
     }
 }
