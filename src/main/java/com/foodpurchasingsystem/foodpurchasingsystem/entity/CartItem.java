@@ -20,8 +20,9 @@ public class CartItem {
     private User user;
     private Integer quantity;
 
-    @ManyToMany(mappedBy = "cartItemList")
-    private List<Order> orders;
+    @ManyToOne
+    @JoinColumn(name = "order_id")
+    private Order order;
 
     public CartItem(Product product, User user, Integer quantity) {
         this.product = product;

@@ -41,4 +41,10 @@ public class OrderController {
         return new ResponseEntity<Order>(orderService.placeOrder(), HttpStatus.OK);
     }
 
+    @PostMapping("/deliverorder")
+    @RolesAllowed({"ROLE_ADMIN", "ROLE_MODERATOR"})
+    public ResponseEntity<Order> deliverOrder() throws UserException {
+        return new ResponseEntity<Order>(orderService.deliverOrder(), HttpStatus.OK);
+    }
+
 }

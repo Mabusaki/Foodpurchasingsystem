@@ -2,6 +2,7 @@ package com.foodpurchasingsystem.foodpurchasingsystem.implementation;
 
 import com.foodpurchasingsystem.foodpurchasingsystem.entity.CartItem;
 import com.foodpurchasingsystem.foodpurchasingsystem.entity.*;
+import com.foodpurchasingsystem.foodpurchasingsystem.exception.CartItemException;
 import com.foodpurchasingsystem.foodpurchasingsystem.exception.ProductException;
 import com.foodpurchasingsystem.foodpurchasingsystem.exception.UserException;
 import com.foodpurchasingsystem.foodpurchasingsystem.repository.CartItemRepo;
@@ -46,8 +47,8 @@ public class CartItemServiceImpl implements CartItemService {
             return null;
         }
 
-
     }
+
 
     @Override
     public CartItem removeProductFromCart(Integer productId) throws UserException, ProductException {

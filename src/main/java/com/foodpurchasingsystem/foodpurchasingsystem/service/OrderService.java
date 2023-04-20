@@ -10,4 +10,6 @@ public interface OrderService {
     List<Order> viewAllOrders() throws OrderException;
     List<Order> viewAllOrdersByLoggedUser() throws OrderException, UserException;
     Order placeOrder() throws UserException;
+
+    Order deliverOrder() throws UserException;
 }

@@ -54,7 +54,22 @@ public class OrderServiceImpl implements OrderService {
           }
           Order order = new Order(LocalDateTime.now(), "pending", totalPrice , getLoggedUser.getCurrentUser());
           orderRepository.save(order);
+          List<CartItem> cartItemList = cartItemRepo.findAllByUser(getLoggedUser.getCurrentUser());
+          for(CartItem c : cartItemList) {
+              c.setOrder(order);
+          }
+          cartItemRepo.saveAll(cartItemList);
         return order;
-
     }
+
+    @Override
+    public Order deliverOrder() throws UserException {
+        Order order = orderRepository.findByUser(getLoggedUser.getCurrentUser());
+        order.setOrderStatus("delivered");
+        List<CartItem> cartItems = cartItemRepo.findAllByUser(getLoggedUser.getCurrentUser());
+        cartItemRepo.deleteAll();
+        return order;
+    }
+
+
 }

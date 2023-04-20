@@ -5,6 +5,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -18,17 +19,7 @@ public class Order {
     private LocalDateTime date;
     private String orderStatus;
     private Double totalPrice;
-//    @JsonIgnore
-//    @OneToOne(cascade = CascadeType.ALL)
-//    private Cart cart;
 
-    @JsonIgnore
-    @ManyToMany
-    @JoinTable(
-            name = "order_item",
-            joinColumns = @JoinColumn(name = "order_id", referencedColumnName = "orderId"),
-            inverseJoinColumns = @JoinColumn(name = "cart_item_id", referencedColumnName = "itemId"))
-    private List<CartItem> cartItemList;
 
     @JsonIgnore
     @ManyToOne(cascade = CascadeType.ALL)
