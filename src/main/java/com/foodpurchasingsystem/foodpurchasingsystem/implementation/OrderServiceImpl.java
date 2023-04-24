@@ -1,33 +1,33 @@
 package com.foodpurchasingsystem.foodpurchasingsystem.implementation;
 
 import com.foodpurchasingsystem.foodpurchasingsystem.entity.CartItem;
+import com.foodpurchasingsystem.foodpurchasingsystem.entity.DeliveredItem;
 import com.foodpurchasingsystem.foodpurchasingsystem.entity.Order;
-import com.foodpurchasingsystem.foodpurchasingsystem.entity.User;
 import com.foodpurchasingsystem.foodpurchasingsystem.exception.OrderException;
 import com.foodpurchasingsystem.foodpurchasingsystem.exception.UserException;
 import com.foodpurchasingsystem.foodpurchasingsystem.repository.CartItemRepo;
+import com.foodpurchasingsystem.foodpurchasingsystem.repository.DeliveredItemRepo;
 import com.foodpurchasingsystem.foodpurchasingsystem.repository.OrderRepository;
 import com.foodpurchasingsystem.foodpurchasingsystem.repository.UserRepository;
 import com.foodpurchasingsystem.foodpurchasingsystem.service.OrderService;
 import com.foodpurchasingsystem.foodpurchasingsystem.util.GetLoggedUser;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
-    private final UserRepository userRepository;
     private final CartItemRepo cartItemRepo;
     private final GetLoggedUser getLoggedUser;
-    public OrderServiceImpl(OrderRepository orderRepository, UserRepository userRepository, CartItemRepo cartItemRepo, GetLoggedUser getLoggedUser) {
+    private final DeliveredItemRepo deliveredItemRepo;
+    public OrderServiceImpl(OrderRepository orderRepository, CartItemRepo cartItemRepo, GetLoggedUser getLoggedUser, DeliveredItemRepo deliveredItemRepo) {
         this.orderRepository = orderRepository;
-        this.userRepository = userRepository;
         this.cartItemRepo = cartItemRepo;
         this.getLoggedUser = getLoggedUser;
+        this.deliveredItemRepo = deliveredItemRepo;
     }
 
     @Override
@@ -64,12 +64,16 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Order deliverOrder() throws UserException {
-        Order order = orderRepository.findByUser(getLoggedUser.getCurrentUser());
+        Order order = orderRepository.findByUserAndOrderStatus(getLoggedUser.getCurrentUser(), "pending");
         order.setOrderStatus("delivered");
         List<CartItem> cartItems = cartItemRepo.findAllByUser(getLoggedUser.getCurrentUser());
-        cartItemRepo.deleteAll();
+        List<DeliveredItem> deliveredItems = new ArrayList<>();
+        for(int i = 0; i<cartItems.size(); i++){
+            DeliveredItem d = new DeliveredItem(cartItems.get(i).getProduct(), cartItems.get(i).getUser(),cartItems.get(i).getQuantity(), cartItems.get(i).getOrder(), false, LocalDateTime.now());
+            deliveredItems.add(d);
+        }
+        deliveredItemRepo.saveAll(deliveredItems);
+        cartItemRepo.deleteAll(cartItems);
         return order;
     }
-
-
 }

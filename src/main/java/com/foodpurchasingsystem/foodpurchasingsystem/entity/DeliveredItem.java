@@ -3,15 +3,15 @@ package com.foodpurchasingsystem.foodpurchasingsystem.entity;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.util.List;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Data
-public class CartItem {
-
+public class DeliveredItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer itemId;
+    private Integer id;
 
     @ManyToOne
     @JoinColumn(name = "product_id")
@@ -19,7 +19,6 @@ public class CartItem {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
-
     private Integer quantity;
 
     @ManyToOne
@@ -27,14 +26,16 @@ public class CartItem {
     private Order order;
 
     private boolean isActive;
-    public CartItem(Product product, User user, Integer quantity, boolean isActive) {
+    private LocalDateTime deliverDate;
+    public DeliveredItem(Product product, User user, Integer quantity, Order order, boolean isActive, LocalDateTime deliverDate) {
         this.product = product;
         this.user = user;
         this.quantity = quantity;
+        this.order = order;
         this.isActive = isActive;
+        this.deliverDate = deliverDate;
     }
 
-    public CartItem() {
-
+    public DeliveredItem() {
     }
 }

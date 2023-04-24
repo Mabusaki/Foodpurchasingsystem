@@ -40,15 +40,13 @@ public class CartItemServiceImpl implements CartItemService {
         Product product = productRepo.findById(productId).orElseThrow(() -> new ProductException("Product not found in user's cart"));
         boolean exists = cartItemRepo.existsByUserAndProduct(getLoggedUser.getCurrentUser(), product);
         if(!exists){
-            CartItem cartItem = new CartItem(product,getLoggedUser.getCurrentUser(),1);
+            CartItem cartItem = new CartItem(product,getLoggedUser.getCurrentUser(),1, true);
             cartItemRepo.save(cartItem);
             return cartItem;
         }else{
             return null;
         }
-
     }
-
 
     @Override
     public CartItem removeProductFromCart(Integer productId) throws UserException, ProductException {

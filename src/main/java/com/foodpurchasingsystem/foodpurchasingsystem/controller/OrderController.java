@@ -28,7 +28,7 @@ public class OrderController {
     }
 
     //View all orders placed by logged user
-    @GetMapping("/volu")
+    @GetMapping("/viewbylogged")
     @RolesAllowed({ "ROLE_USER", "ROLE_MODERATOR", "ROLE_ADMIN" })
     public ResponseEntity<List<Order>> viewAllOrdersByUser() throws UserException, OrderException {
         return new ResponseEntity<List<Order>>(orderService.viewAllOrdersByLoggedUser(), HttpStatus.OK);
