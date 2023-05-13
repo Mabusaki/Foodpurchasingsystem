@@ -20,7 +20,6 @@ public class DeliveredItem {
     @JoinColumn(name = "user_id")
     private User user;
     private Integer quantity;
-
     @ManyToOne
     @JoinColumn(name = "order_id")
     private Order order;

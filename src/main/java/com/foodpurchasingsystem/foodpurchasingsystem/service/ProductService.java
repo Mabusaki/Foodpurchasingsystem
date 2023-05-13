@@ -6,6 +6,7 @@ import com.foodpurchasingsystem.foodpurchasingsystem.entity.Product;
 import com.foodpurchasingsystem.foodpurchasingsystem.exception.CategoryException;
 import com.foodpurchasingsystem.foodpurchasingsystem.exception.ProductException;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import java.util.List;
 
 public interface ProductService {
@@ -16,4 +17,5 @@ public interface ProductService {
     Product addProduct(ProductDTOreq productDTOreq) throws ProductException;
     Product updateProduct(ProductDTOreq productDTOreq) throws ProductException;
     Product removeProduct(Integer productId) throws ProductException;
+    Product setInitialQuantity(String productName, Integer initialQuantity);
 }

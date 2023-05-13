@@ -3,6 +3,7 @@ package com.foodpurchasingsystem.foodpurchasingsystem.implementation;
 import com.foodpurchasingsystem.foodpurchasingsystem.entity.CartItem;
 import com.foodpurchasingsystem.foodpurchasingsystem.entity.DeliveredItem;
 import com.foodpurchasingsystem.foodpurchasingsystem.entity.Order;
+import com.foodpurchasingsystem.foodpurchasingsystem.entity.User;
 import com.foodpurchasingsystem.foodpurchasingsystem.exception.OrderException;
 import com.foodpurchasingsystem.foodpurchasingsystem.exception.UserException;
 import com.foodpurchasingsystem.foodpurchasingsystem.repository.CartItemRepo;
@@ -23,11 +24,13 @@ public class OrderServiceImpl implements OrderService {
     private final CartItemRepo cartItemRepo;
     private final GetLoggedUser getLoggedUser;
     private final DeliveredItemRepo deliveredItemRepo;
-    public OrderServiceImpl(OrderRepository orderRepository, CartItemRepo cartItemRepo, GetLoggedUser getLoggedUser, DeliveredItemRepo deliveredItemRepo) {
+    private final UserRepository userRepository;
+    public OrderServiceImpl(OrderRepository orderRepository, CartItemRepo cartItemRepo, GetLoggedUser getLoggedUser, DeliveredItemRepo deliveredItemRepo, UserRepository userRepository) {
         this.orderRepository = orderRepository;
         this.cartItemRepo = cartItemRepo;
         this.getLoggedUser = getLoggedUser;
         this.deliveredItemRepo = deliveredItemRepo;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -63,10 +66,11 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Order deliverOrder() throws UserException {
-        Order order = orderRepository.findByUserAndOrderStatus(getLoggedUser.getCurrentUser(), "pending");
+    public Order deliverOrder(Long userId) throws UserException {
+        User user = userRepository.findById(userId).orElseThrow(()-> new UserException("User not found"));
+        Order order = orderRepository.findByUserAndOrderStatus(user, "pending");
         order.setOrderStatus("delivered");
-        List<CartItem> cartItems = cartItemRepo.findAllByUser(getLoggedUser.getCurrentUser());
+        List<CartItem> cartItems = cartItemRepo.findAllByUser(user);
         List<DeliveredItem> deliveredItems = new ArrayList<>();
         for(int i = 0; i<cartItems.size(); i++){
             DeliveredItem d = new DeliveredItem(cartItems.get(i).getProduct(), cartItems.get(i).getUser(),cartItems.get(i).getQuantity(), cartItems.get(i).getOrder(), false, LocalDateTime.now());

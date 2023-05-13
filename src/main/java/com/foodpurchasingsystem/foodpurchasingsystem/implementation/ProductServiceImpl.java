@@ -65,7 +65,7 @@ public class ProductServiceImpl implements ProductService {
             productRepo.save(product);
             return product;
         }else{
-            throw new ProductException("Fill minimum one filed");
+            throw new ProductException("Fill minimum one field");
         }
     }
 
@@ -84,4 +84,13 @@ public class ProductServiceImpl implements ProductService {
         productRepo.delete(product);
         return product;
     }
+
+    @Override
+    public Product setInitialQuantity(String name , Integer initialQuantity){
+        Product product = productRepo.findByProductName(name);
+        product.setInitialQuantity(initialQuantity);
+        productRepo.save(product);
+        return product;
+    }
+
 }

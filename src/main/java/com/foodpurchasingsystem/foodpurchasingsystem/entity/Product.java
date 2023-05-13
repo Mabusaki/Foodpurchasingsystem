@@ -17,7 +17,7 @@ public class Product {
     private String productName;
     private double price;
     private String filePath;
-
+    private Integer initialQuantity;
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name="category_id")

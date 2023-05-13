@@ -45,21 +45,6 @@ public class User  {
 
     // TODO CHANGED ENTITY RELATIONSHIPS
 
-//    @JsonIgnore
-//    @OneToOne(cascade = CascadeType.ALL)
-//    private Cart cart;
-
-//    public Cart getCart() {
-//        return cart;
-//    }
-//
-//    public void setCart(Cart cart) {
-//        this.cart = cart;
-//    }
-//    @JsonIgnore
-//    @OneToMany
-//    private List<CartItem> cartItems;
-
     public List<Order> getOrders() {
         return orders;
     }

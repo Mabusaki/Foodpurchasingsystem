@@ -28,7 +28,6 @@ public class CartItemController {
         return new ResponseEntity<List<CartItem>>(cartItemService.viewCartItemsByUser(), HttpStatus.OK);
     }
 
-
     @PostMapping("/addproduct/{productId}")
     @RolesAllowed({ "ROLE_USER", "ROLE_MODERATOR", "ROLE_ADMIN" })
     public ResponseEntity<CartItem> addProductToCart(@PathVariable Integer productId) throws UserException, ProductException {

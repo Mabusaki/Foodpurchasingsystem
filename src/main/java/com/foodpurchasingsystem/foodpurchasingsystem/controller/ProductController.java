@@ -19,7 +19,6 @@ import java.util.List;
 
 public class ProductController {
     private final ProductService productService;
-
     public ProductController(ProductService productService) {
         this.productService = productService;
     }
@@ -54,5 +53,11 @@ public class ProductController {
     @DeleteMapping("/remove/{productId}")
     public ResponseEntity<Product> removeProductById(@PathVariable("productId") Integer productId) throws ProductException{
         return new ResponseEntity<Product>(productService.removeProduct(productId), HttpStatus.OK);
+    }
+
+    @RolesAllowed("ROLE_ADMIN")
+    @PutMapping("/setquantity/{productName}")
+    public ResponseEntity<Product> setInitialQuantity(@PathVariable String productName, @RequestParam(name = "quantity") Integer quantity){
+        return new ResponseEntity<Product>(productService.setInitialQuantity(productName,quantity), HttpStatus.OK);
     }
 }

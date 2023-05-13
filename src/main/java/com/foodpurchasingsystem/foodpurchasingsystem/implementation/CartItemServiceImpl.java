@@ -40,11 +40,15 @@ public class CartItemServiceImpl implements CartItemService {
         Product product = productRepo.findById(productId).orElseThrow(() -> new ProductException("Product not found in user's cart"));
         boolean exists = cartItemRepo.existsByUserAndProduct(getLoggedUser.getCurrentUser(), product);
         if(!exists){
-            CartItem cartItem = new CartItem(product,getLoggedUser.getCurrentUser(),1, true);
-            cartItemRepo.save(cartItem);
-            return cartItem;
+            if(product.getInitialQuantity() >= 1){
+                CartItem cartItem = new CartItem(product,getLoggedUser.getCurrentUser(),1, true);
+                cartItemRepo.save(cartItem);
+                product.setInitialQuantity(product.getInitialQuantity()-1);
+                productRepo.save(product);
+                return cartItem;
+            }else throw new ProductException("Product sold out.");
         }else{
-            return null;
+            throw new ProductException("Product already added, try to increase quantity.");
         }
     }
 
@@ -60,9 +64,14 @@ public class CartItemServiceImpl implements CartItemService {
     public CartItem increaseQuantity(Integer productId) throws UserException, ProductException {
         Product product = productRepo.findById(productId).orElseThrow(() -> new ProductException("Product not found in user's cart"));
         CartItem cartItem = cartItemRepo.findCartItemByUserAndProduct(getLoggedUser.getCurrentUser(), product);
-        cartItem.setQuantity(cartItem.getQuantity()+1);
-        cartItemRepo.save(cartItem);
-        return cartItem;
+        if(product.getInitialQuantity() >= 1){
+            cartItem.setQuantity(cartItem.getQuantity()+1);
+            cartItemRepo.save(cartItem);
+            product.setInitialQuantity(product.getInitialQuantity()-1);
+            productRepo.save(product);
+            return cartItem;
+        }else throw new ProductException("Product sold out");
+
     }
 
     @Override
