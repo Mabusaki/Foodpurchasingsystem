@@ -52,6 +52,7 @@ public class OrderController {
     }
 
     @GetMapping("/exporttoexcel")
+    @RolesAllowed("ROLE_ADMIN")
     public void downloadExcel(HttpServletResponse response) throws IOException {
         response.setContentType("appication/octet-stream");
 
