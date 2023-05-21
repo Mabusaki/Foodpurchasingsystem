@@ -26,7 +26,7 @@ public class OrderController {
 
     //Simply view all orders
     @GetMapping("/viewallorders")
-    @RolesAllowed("ROLE_ADMIN")
+    @RolesAllowed({"ROLE_ADMIN", "ROLE_MODERATOR"})
     public ResponseEntity<List<Order>> viewAllOrders() throws OrderException {
         return new ResponseEntity<List<Order>>(orderService.viewAllOrders(), HttpStatus.OK);
     }
@@ -63,6 +63,7 @@ public class OrderController {
 
         excelUtil.generateExcelFile(response);
     }
+
 
 
 }
